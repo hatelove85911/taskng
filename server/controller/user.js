@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt')
-const userModel = require('../model/user.js')
+const UserModel = require('../model/user.js')
 const logger = require('../common/logger')
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
 module.exports = {
   loginByUserPwd (req, res) {
-    const {email, username, pwd} = req.body
-    userModel.findOne().byUsername(username)
+    const { username, pwd } = req.body
+    UserModel.findOne().byUsername(username)
       .then((user) => {
         if (user) {
           bcrypt.compare(pwd, user.pwd)
@@ -28,10 +28,10 @@ module.exports = {
       })
   },
   register (req, res) {
-    const {email, username, pwd} = req.body
+    const { email, username, pwd } = req.body
     logger.info(`register: ${username}, ${email}, ${pwd}`)
     // check user, email exists
-    userModel.findOne().byUsername(username)
+    UserModel.findOne().byUsername(username)
       // .or()
       // .byEmail(email)
       .then((user) => {
@@ -41,8 +41,11 @@ module.exports = {
             error: 'User already exists'
           })
         } else {
-          bcrypt.hash(pwd, 10, function(err, hash) {
-            const user = new userModel({
+          bcrypt.hash(pwd, 10, function (err, hash) {
+            if (err) {
+              // todo handle error
+            }
+            const user = new UserModel({
               username,
               email,
               pwd: hash
@@ -59,6 +62,5 @@ module.exports = {
           })
         }
       })
-
   }
 }

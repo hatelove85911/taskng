@@ -1,4 +1,4 @@
-const { createLogger, format, transports } = require('winston');
+const { createLogger, format, transports } = require('winston')
 
 const logger = createLogger({
   format: format.combine(
@@ -14,7 +14,6 @@ const logger = createLogger({
     new transports.File({ filename: '/var/log/taskng-error.log', level: 'error' }),
     new transports.File({ filename: '/var/log/taskng-combined.log', level: 'info' })
   ]
-});
-
+})
 
 module.exports = logger
